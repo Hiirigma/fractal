@@ -21,6 +21,7 @@ class Bashe:
 
         self._screen = pygame.display.set_mode([self._resX, self._resY])
         self._font = pygame.font.SysFont('Comic Sans MS', 60)
+        self.text_color = [(50, 205, 50), (0, 0, 0)]
         self._loadPic()
 
     def _loadPic(self):
@@ -86,13 +87,13 @@ class Bashe:
         self._screen.fill(self._background_color, (0, 0, 1028, 120))
         text_surface = \
             self._font.render(f"{self._first_name}: {self._total_cnt[False]}",
-                              False, (0, 0, 0))
+                              False, self.text_color[self._curr_player])
 
         self._screen.blit(text_surface, (0, 0))
 
         text_surface = \
             self._font.render(f"{self._second_name}: {self._total_cnt[True]}",
-                              False, (0, 0, 0))
+                              False, self.text_color[not self._curr_player])
 
         self._screen.blit(text_surface, (0, 60))
 
@@ -116,8 +117,6 @@ class Bashe:
             name = self._second_name
 
         result = f"{name}: {self._total_cnt[self._curr_player]} - Winner"
-        if self._total_cnt[True] == self._total_cnt[False]:
-            result = "Friendship is magic. Both players win"
 
         text_surface = \
             self._font.render(result,
@@ -184,7 +183,8 @@ class Bashe:
                 for cat in self._cat_pictures:
                     if cat.collidepoint(event.pos):  # is mouse over button
                         if cat in self._cat_home:
-                            self._curr_cnt = self._M
+                            if self._curr_cnt > 0:
+                                self._curr_cnt = self._M
                             break
 
                         self._total_score += 1
@@ -211,19 +211,28 @@ class Bashe:
 
         is_prime = False
         rows = 1
-        if self._N % 7 == 0:
+        if self._N < 10:
+            rows = self._N
+        elif self._N % 11 == 0:
+            rows = 9
+        elif self._N % 9 == 0:
+            rows = 9
+        elif self._N % 8 == 0:
+            rows = 9
+        elif self._N % 7 == 0:
             rows = 7
         elif self._N % 5 == 0:
             rows = 5
+        elif self._N % 4 == 0:
+            rows = 4
         elif self._N % 3 == 0:
             rows = 3
-        elif self._N % 2 == 0:
-            rows = 2
         else:
             is_prime = True
 
         columns = self._N // rows
         if is_prime:
+            rows = self._N // 2
             columns = (self._N - 1) // rows
 
         self._catSize = self._resX // rows - 50, self._resY // rows - 50
@@ -238,7 +247,8 @@ class Bashe:
                                                                         j * self._catSize[1] + center[1])))
 
         if is_prime:
-            self._screen.blit(self._cat, (0, (columns + 1) * self._catSize[0]))
+            self._cat_pictures.append(self._screen.blit(self._cat, (center[0],
+                                          columns * self._catSize[1] + center[1])))
 
         pygame.display.flip()
 
@@ -254,6 +264,7 @@ class Bashe:
             if self._curr_cnt >= self._M:
                 self._curr_cnt = 0
                 self._curr_player = not self._curr_player
+                self._outScore()
 
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
