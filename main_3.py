@@ -7,8 +7,15 @@ b = 1
 c = 1
 d = 1
 e = 1
+
 for g in range(n):
     my_list.append(list(map(int, input().split())))
+
+# fix 1 column
+if n == 1 or m == 1:
+    print(1)
+    exit()
+
 for i in range(n):
     for j in range(m):
         if my_list[i][j] == a:
@@ -25,10 +32,13 @@ if y == 0:
         c = my_list[x - 1][y + 1]
 # fix (test10)
 elif x == 0:
-    if y + 1 < n and x + 1 < m - 1:
+    if y + 1 < n:
         c = my_list[x + 1][y + 1]
-    if x + 1 < m - 1 and y != 0:
+    if y != 0:
         d = my_list[x + 1][y - 1]
+    # fix test22
+    if y + 1 < n:
+        d = my_list[x][y + 1]
 # -------------------------------
 elif y == n - 1:
     if x == 0:
@@ -50,7 +60,7 @@ elif y == n - 1:
         # -----------------------
 else:
     if x != 0 and x != m - 1:
-        # Fix (test12)
+        # Fix (test17)
         if x + 1 < m - 1 and y + 1 < n:
             b = my_list[x + 1][y + 1]
         if y + 1 < n:
@@ -187,4 +197,38 @@ test18
 30 50 20 1
 60 5 8 7
 
+test18
+1
+1 1 12
+11 12
+
+test19
+1
+2 1 12
+11
+12
+
+test20
+13
+2 2 12
+11 13
+12 10
+
+test21
+10
+2 2 11
+11 13
+12 10
+
+test22
+12
+2 2 13
+11 13
+12 10
+
+test23
+11
+2 2 10
+11 13
+12 10
 """
