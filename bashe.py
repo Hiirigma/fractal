@@ -163,6 +163,10 @@ class Bashe:
             self._outGrumpyCat("Имя второго игрока не должно быть пустым")
             return
 
+        if self._N > 30:
+            self._outGrumpyCat("Параметр N должен быть меньше 30")
+            return
+
         if self._N <= 0:
             self._outGrumpyCat("Параметр N должен быть положительным числом и больше M")
             return
